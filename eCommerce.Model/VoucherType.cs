@@ -8,16 +8,13 @@ using System.Threading.Tasks;
 
 namespace eCommerce.Model
 {
-    public class Product : IProduct
+    public class VoucherType : IVoucherType
     {
-        public int ProductId { get; set; }
-
+        public int VoucherTypeId { get; set; }
+        public string VoucherModule { get; set; }
+        [MaxLength(30)]
+        public string Type { get; set; }
+        [MaxLength(150)]
         public string Description { get; set; }
-
-        [MaxLength(255)]
-        public string ImageUrl { get; set; }
-
-        public decimal Price { get; set; }
-        public decimal CostPrice { get; set; }
     }
 }

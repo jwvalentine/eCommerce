@@ -12,12 +12,18 @@ namespace eCommerce.Services
     public class BasketService
     {
         IRepositoryBase<Basket> baskets;
+        private IRepositoryBase<Voucher> vouchers;
+        private IRepositoryBase<VoucherType> voucherTypes;
+        private IRepositoryBase<BasketVoucher> basketVouchers;
 
         public const string BasketSessionName = "eCommerceBasket";
 
-        public BasketService(IRepositoryBase<Basket> baskets)
+        public BasketService(IRepositoryBase<Basket> baskets, IRepositoryBase<Voucher> vouchers, IRepositoryBase<BasketVoucher> basketVouchers, IRepositoryBase<VoucherType> voucherTypes)
         {
             this.baskets = baskets;
+            this.vouchers = vouchers;
+            this.basketVouchers = basketVouchers;
+            this.voucherTypes = voucherTypes;
         }
 
         private Basket createNewBasket(HttpContextBase httpContext)
@@ -47,7 +53,7 @@ namespace eCommerce.Services
         {
             bool success = true;
 
-            Basket basket = GetBasket( httpContext);
+            Basket basket = GetBasket(httpContext);
             BasketItem item = basket.BasketItems.FirstOrDefault(i => i.ProductId == productId);
 
             if (item == null)
@@ -58,7 +64,7 @@ namespace eCommerce.Services
                     ProductId = productId,
                     Quantity = quantity
                 };
-                basket.BasketItems.Add(item);
+                basket.AddBasketItem(item);
             }
             else
             {
@@ -93,6 +99,61 @@ namespace eCommerce.Services
             }
 
             return basket;
+        }
+
+        public void AddVoucher(string voucherCode, HttpContextBase httpContext)
+        {
+            Basket basket = GetBasket(httpContext);
+            Voucher voucher = vouchers.GetAll().FirstOrDefault(v => v.VoucherCode == voucherCode);
+
+            if (voucher != null)
+            {
+                VoucherType voucherType = voucherTypes.GetById(voucher.VoucherTypeId);
+                if (voucherType != null)
+                {
+                    BasketVoucher basketVoucher = new BasketVoucher();
+                    if (voucherType.Type == "MoneyOff")
+                    {
+                        MoneyOff(voucher, basket, basketVoucher);
+                    }
+                    if (voucherType.Type == "PercentOff")
+                    {
+                        PercentOff(voucher, basket, basketVoucher);
+                    }
+
+                    baskets.Commit();
+                }
+            }
+
+        }
+
+        public void MoneyOff(Voucher voucher, Basket basket, BasketVoucher basketVoucher)
+        {
+            decimal basketTotal = basket.BasketTotal();
+            if (voucher.MinSpend < basketTotal )
+            {
+                basketVoucher.Value = voucher.Value *-1;
+                basketVoucher.VoucherCode = voucher.VoucherCode;
+                basketVoucher.VoucherDescription = voucher.VoucherDescription;
+                basketVoucher.VoucherId = voucher.VoucherId;
+                basket.AddBasketVoucher(basketVoucher);
+            }
+
+        }
+
+
+        public void PercentOff(Voucher voucher, Basket basket, BasketVoucher basketVoucher)
+        {
+            if (voucher.MinSpend > basket.BasketTotal())
+            {
+                basketVoucher.Value = (voucher.Value * (basket.BasketTotal() / 100)) * -1;
+                basketVoucher.VoucherCode = voucher.VoucherCode;
+                basketVoucher.VoucherDescription = voucher.VoucherDescription;
+                basketVoucher.VoucherId = voucher.VoucherId;
+                basket.AddBasketVoucher(basketVoucher);
+            }
+
+           
         }
     }
 }
