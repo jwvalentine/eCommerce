@@ -1,4 +1,5 @@
 ﻿using eCommerce.DAL.Data;
+using eCommerce.Contracts.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace eCommerce.DAL.Repositories
 {
-    public abstract class RepositoryBase<TEntity> where TEntity : class
+   public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class
     {
         internal DataContext context;
         internal DbSet<TEntity> dbSet;
