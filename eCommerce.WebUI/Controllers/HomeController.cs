@@ -23,12 +23,15 @@ namespace eCommerce.WebUI.Controllers
 
         public ActionResult Index()
         {
-            //CustomerRepository customers = new CustomerRepository(new DataContext());
-            ProductRepository products = new ProductRepository(new DataContext());
-
-           //  = new CustomerRepository(new DataContext());
+            var productList = products.GetAll();
          
-            return View();
+            return View(productList);
+        }
+        public ActionResult Details(int id)
+        {
+            var product = products.GetById(id);
+
+            return View(product);
         }
 
         public ActionResult About()
@@ -44,5 +47,6 @@ namespace eCommerce.WebUI.Controllers
 
             return View();
         }
+
     }
 }
