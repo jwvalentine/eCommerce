@@ -11,6 +11,13 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
+           
+        </dt>
+
+        <dd>
+            <img style="width:15%" src="/images/@Model.ImageUrl" alt="@Model.Description" />
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.Description)
         </dt>
 
@@ -18,13 +25,7 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
+       
 
         <dt>
             @Html.DisplayNameFor(model => model.Price)

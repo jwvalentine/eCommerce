@@ -1,5 +1,11 @@
 ﻿@model eCommerce.Model.Product
 
+@{
+    ViewBag.Title = "EditProduct";
+}
+
+<h2>EditProduct</h2>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

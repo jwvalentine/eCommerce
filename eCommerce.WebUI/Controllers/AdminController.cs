@@ -24,27 +24,34 @@ namespace eCommerce.WebUI.Controllers
         {
             return View();
         }
-        public ActionResult ProductList()
-        {
+
+        public ActionResult ProductList() {
             var model = products.GetAll();
+
             return View(model);
         }
-        public ActionResult CreateProduct()
-        {
+
+        public ActionResult CreateProduct() {
             var model = new Product();
+
             return View(model);
         }
 
         [HttpPost]
         public ActionResult CreateProduct(Product product)
         {
+
             products.Insert(product);
             products.Commit();
+
             return RedirectToAction("ProductList");
         }
+
         public ActionResult EditProduct(int id)
         {
             Product product = products.GetById(id);
+
+
             return View(product);
         }
 
@@ -53,20 +60,10 @@ namespace eCommerce.WebUI.Controllers
         {
             products.Update(product);
             products.Commit();
+
             return RedirectToAction("ProductList");
         }
-        //public ActionResult DeleteProduct(int id)
-        //{
-        //    Product product = products.GetById(id);
-        //    return View(product);
-        //}
 
-        //[HttpPost]
-        //public ActionResult DeleteProduct(Product product)
-        //{
-        //    products.Delete(product);
-        //    products.Commit();
-        //    return RedirectToAction("ProductList");
-        //}
+        
     }
 }

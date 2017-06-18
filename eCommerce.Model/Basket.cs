@@ -8,8 +8,12 @@ namespace eCommerce.Model
 {
     public class Basket
     {
-        public int BasketId { get; set; }
+        public Guid BasketId { get; set; }
         public DateTime date { get; set; }
+
+        public Basket() {
+            this.BasketItems = new List<BasketItem>();
+        }
 
         public virtual ICollection<BasketItem> BasketItems { get; set; }
     }

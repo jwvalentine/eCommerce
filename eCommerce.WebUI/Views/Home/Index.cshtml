@@ -1,20 +1,17 @@
 ﻿@model IEnumerable<eCommerce.Model.Product>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Product List";
 }
 
-<h2>Index</h2>
+<h2>Products</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
 
 @foreach (var item in Model) {
     <tr>
         <td>
-           <img src="/images/@item.ImageUrl" alt="@item.Description" />
+           <img style="width:15%" src="/images/@item.ImageUrl" alt="@item.Description" />
         </td>
         <td>
             @Html.ActionLink(item.Description, "Details", new { id = item.ProductId })
